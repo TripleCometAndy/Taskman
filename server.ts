@@ -1,13 +1,16 @@
-const express = require('express');
-const path = require('path')
+import express from 'express';
+
+let counter: number = 0;
 
 main();
 
 function main(): void {
-  const app = express();
+  const app: Application = express();
 
   serveStaticFilesFromDir(app, "public");
   initializeGETResponse(app);
+  initializeButtonClickResponse(app);
+  initializeCounterGetResponse(app);
   startServer(app, 3000);
 }
 
@@ -20,6 +23,19 @@ function initializeGETResponse(app: any): void {
     app.get('/', (req, res) => {
       res.sendFile(path.join(__dirname, 'index.html'));
     });
+}
+
+function initializeButtonClickResponse(app: any): void {
+  app.post('/increment-counter', (req, res) => {
+    counter++;
+    console.log("INCREMENT COUNTER: " + counter);
+  })
+}
+
+function initializeCounterGetResponse(app: any): void {
+  app.get('/get-counter', (req, res) => {
+    res.json({counter});
+  })
 }
 
 function startServer(app: any, portNumber : number): void {
